@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.android.inventoryapp.DetailsActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/default_spacing">
+
+            <!-- Image category -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/CategoryStyle"
+                    android:text="@string/category_image" />
+
+                <ImageView
+                    android:id="@+id/cover_image"
+                    android:layout_width="@dimen/image_size"
+                    android:layout_height="@dimen/image_size"
+                    android:contentDescription="@string/image_description"
+                    android:onClick="pickImage"
+                    android:src="@drawable/no_image" />
+
+            </LinearLayout>
+
+            <!-- Overview category -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/default_spacing">
+
+                <!-- Label -->
+                <TextView
+                    style="@style/CategoryStyle"
+                    android:text="@string/category_overview" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <!-- Artist field -->
+                    <EditText
+                        android:id="@+id/edit_disc_artist"
+                        style="@style/EditorFieldStyle"
+                        android:hint="@string/hint_disc_artist"
+                        android:inputType="textCapWords" />
+
+                    <!-- Title field -->
+                    <EditText
+                        android:id="@+id/edit_disc_title"
+                        style="@style/EditorFieldStyle"
+                        android:hint="@string/hint_disc_title"
+                        android:inputType="textCapWords" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <!-- Stock Info category -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/default_spacing">
+
+                <!-- Label -->
+                <TextView
+                    style="@style/CategoryStyle"
+                    android:text="@string/category_stock_info" />
+
+                <!-- Input fields -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <!-- Price field -->
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <!-- Price field input -->
+                        <EditText
+                            android:id="@+id/edit_disc_price"
+                            style="@style/EditorFieldStyle"
+                            android:hint="@string/hint_disc_price"
+                            android:inputType="number" />
+
+                        <!-- Units for price ($) -->
+                        <TextView
+                            android:id="@+id/label_price_units"
+                            style="@style/PriceUnitsStyle"
+                            android:text="@string/unit_disc_price" />
+                    </RelativeLayout>
+
+                    <!-- Quantity field -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <Button
+                            android:id="@+id/sub_quantity"
+                            style="@style/QuantityButtonStyle"
+                            android:text="@string/sub_quantity_button" />
+
+                        <EditText
+                            android:id="@+id/edit_disc_quantity"
+                            style="@style/QuantityFieldStyle"
+                            android:hint="@string/hint_disc_quantity"
+                            android:inputType="numberDecimal" />
+
+                        <Button
+                            android:id="@+id/add_quantity"
+                            style="@style/QuantityButtonStyle"
+                            android:text="@string/add_quantity_button" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Stock Value category -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="36dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/CategoryStyle"
+                    android:text="@string/category_stock_value" />
+
+                <!-- Value field -->
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:paddingEnd="@dimen/value_padding"
+                    android:paddingLeft="@dimen/value_padding"
+                    android:paddingRight="@dimen/value_padding"
+                    android:paddingStart="@dimen/value_padding">
+
+                    <!-- Price Value -->
+                    <TextView
+                        android:id="@+id/disc_value"
+                        style="@style/ValueStyle"
+                        android:text="@string/hint_disc_total" />
+
+                    <!-- Units for value ($) -->
+                    <TextView
+                        android:id="@+id/label_value_units"
+                        style="@style/ValueUnitsStyle"
+                        android:text="@string/unit_disc_price" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/details_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_order" />
+
+</RelativeLayout>

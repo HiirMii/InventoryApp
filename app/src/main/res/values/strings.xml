@@ -1,0 +1,130 @@
+<resources>
+    <!-- Name for the application [CHAR LIMIT=12] -->
+    <string name="app_name">Store Inventory</string>
+
+    <!-- Label for overflow menu option that inserts fake inventory data into the app [CHAR LIMIT=20] -->
+    <string name="action_insert_dummy_data">Insert Dummy Data</string>
+
+    <!-- Dummy text for artist field -->
+    <string name="dummy_artist">Dream Theater</string>
+
+    <!-- Dummy text for title field -->
+    <string name="dummy_title">Images and Words</string>
+
+    <!-- Dummy text for price field -->
+    <string name="dummy_price">1</string>
+
+    <!-- Dummy text for quantity -->
+    <string name="dummy_quantity">10</string>
+
+    <!-- Label for list item price label -->
+    <string name="list_item_price_label">Price:&#160;</string>
+
+    <!-- Label for list item quantity label -->
+    <string name="list_item_quantity_label">Quantity:&#160;</string>
+
+    <!-- Label for overflow menu option that deletes all inventory data in the app [CHAR LIMIT=20] -->
+    <string name="action_delete_all_entries">Delete All Data</string>
+
+    <!-- Label for sell button that decreases quantity of the inventory position by one [CHAR LIMIT=20] -->
+    <string name="button_sell">Sell</string>
+
+    <!-- Title for the details activity to add a new stock item [CHAR LIMIT=20] -->
+    <string name="details_activity_title_new_item">Add to Stock</string>
+
+    <!-- Title for the details activity to edit stock item [CHAR LIMIT=20] -->
+    <string name="details_activity_title_edit_item">Edit Disc</string>
+
+    <!-- Label for details activity menu option to save inventory item and leave editor [CHAR LIMIT=20] -->
+    <string name="action_save">Save</string>
+
+    <!-- Label for details overflow menu option that deletes the current inventory item [CHAR LIMIT=20] -->
+    <string name="action_delete">Delete</string>
+
+    <!-- Label for image category in the details activity [CHAR LIMIT=30] -->
+    <string name="category_image">Image</string>
+
+    <!-- Image description for the image in the details activity [CHAR LIMIT=30] -->
+    <string name="image_description">Disc cover</string>
+
+    <!-- Label for overview category of attributes in the details activity [CHAR LIMIT=30] -->
+    <string name="category_overview">Overview</string>
+
+    <!-- Label for stock information in the details activity [CHAR LIMIT=30] -->
+    <string name="category_stock_info">Stock Info</string>
+
+    <!-- Label for stock value in the details activity [CHAR LIMIT=30] -->
+    <string name="category_stock_value">Stock Value</string>
+
+    <!-- Text hint for artist field in the details activity [CHAR LIMIT=30] -->
+    <string name="hint_disc_artist">Artist</string>
+
+    <!-- Text hint for title field in the details activity [CHAR LIMIT=30] -->
+    <string name="hint_disc_title">Title</string>
+
+    <!-- Text hint for price field in the details activity [CHAR LIMIT=30] -->
+    <string name="hint_disc_price">Price</string>
+
+    <!-- Units for price of the item (dollars) [CHAR LIMIT=5] -->
+    <string name="unit_disc_price">$</string>
+
+    <!-- Text hint for total value field in the details activity [CHAR LIMIT=30] -->
+    <string name="hint_disc_total">0</string>
+
+    <!-- Text hint for quantity field in the details activity [CHAR LIMIT=30] -->
+    <string name="hint_disc_quantity">Quantity</string>
+
+    <!-- Text hint for add quantity button in the details activity [CHAR LIMIT=30] -->
+    <string name="add_quantity_button">+</string>
+
+    <!-- Text hint for subtract quantity button in the details activity [CHAR LIMIT=30] -->
+    <string name="sub_quantity_button">-</string>
+
+    <!-- Units for value of the item (dollars) [CHAR LIMIT=5] -->
+    <string name="unit_disc_value">$</string>
+
+    <!-- Title text for the empty view -->
+    <string name="empty_view_title_text">There is no sound of the stock&#8230;</string>
+
+    <!-- Subtitle text for the empty view -->
+    <string name="empty_view_subtitle_text">Get started by adding a disc item</string>
+
+    <!-- Delete all discs confirmation message -->
+    <string name="delete_all_confirmation_message">
+        Do you really want to delete all discs from the list?</string>
+
+    <!-- Delete confirmation buttons text messages -->
+    <string name="delete_button">Delete</string>
+    <string name="cancel_button">Cancel</string>
+
+    <!-- Toast message in editor when new disc has been successfully inserted [CHAR LIMIT=NONE] -->
+    <string name="editor_insert_disc_successful">Disc saved</string>
+
+    <!-- Toast message in editor when new disc has failed to be inserted [CHAR LIMIT=NONE] -->
+    <string name="editor_insert_disc_failed">Error with saving disc</string>
+
+    <!-- Toast message in editor when current disc was successfully updated [CHAR LIMIT=NONE] -->
+    <string name="editor_update_disc_successful">Disc updated</string>
+
+    <!-- Toast message in editor when current disc has failed to be updated [CHAR LIMIT=NONE] -->
+    <string name="editor_update_disc_failed">Error with updating disc</string>
+
+    <!-- Toast message in editor when current disc was successfully deleted [CHAR LIMIT=NONE] -->
+    <string name="editor_delete_disc_successful">Disc deleted</string>
+
+    <!-- Toast message in editor when current disc has failed to be deleted [CHAR LIMIT=NONE] -->
+    <string name="editor_delete_disc_failed">Error with deleting disc</string>
+
+    <!-- Dialog message to ask the user to confirm deleting the current disc [CHAR LIMIT=NONE] -->
+    <string name="delete_dialog_msg">Delete this disc?</string>
+
+    <!-- Dialog message when user is leaving editor but hasn't saved changes [CHAR LIMIT=NONE] -->
+    <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing?</string>
+
+    <!-- Dialog button text for the option to discard a user's changes [CHAR LIMIT=20] -->
+    <string name="discard">Discard</string>
+
+    <!-- Dialog button text for the option to keep editing the current disc [CHAR LIMIT=20] -->
+    <string name="keep_editing">Keep Editing</string>
+
+</resources>
