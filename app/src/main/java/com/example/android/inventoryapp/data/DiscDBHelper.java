@@ -49,7 +49,7 @@ public class DiscDBHelper extends SQLiteOpenHelper {
         // Create a String that contains the SQL statement to create the discs table
         String SQL_CREATE_DISCS_TABLE = "CREATE TABLE " + TABLE_NAME + " ("
                 + DiscEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                //+ DiscEntry.COLUMN_DISC_IMAGE + " TEXT NOT NULL DEFAULT 'no image', "
+                + DiscEntry.COLUMN_DISC_IMAGE + " TEXT NOT NULL, "
                 + DiscEntry.COLUMN_DISC_ARTIST + " TEXT NOT NULL, "
                 + DiscEntry.COLUMN_DISC_TITLE + " TEXT NOT NULL, "
                 + DiscEntry.COLUMN_DISC_PRICE + " INTEGER NOT NULL DEFAULT 0, "

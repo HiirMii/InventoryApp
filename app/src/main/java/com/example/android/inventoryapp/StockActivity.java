@@ -103,9 +103,9 @@ public class StockActivity extends AppCompatActivity implements
         values.put(DiscEntry.COLUMN_DISC_QUANTITY, 7);
 
         // getting uri of the dummy_image
-        /* Uri imageUri
-                = Uri.parse("android.resource://com.example.android.inventoryapp/drawable/dummy_image.jpg");
-        values.put(DiscEntry.COLUMN_DISC_IMAGE, String.valueOf(imageUri)); */
+        Uri imageUri
+                = Uri.parse("android.resource://com.example.android.inventoryapp/drawable/dummy_image");
+        values.put(DiscEntry.COLUMN_DISC_IMAGE, String.valueOf(imageUri));
 
         // Insert a new row for dummy_data into the provider using the ContentResolver.
         // Use the {@link DiscEntry#CONTENT_URI} to indicate that we want to insert
@@ -187,7 +187,7 @@ public class StockActivity extends AppCompatActivity implements
         // Define a projection that specifies the columns from the table we care about.
         String[] projection = {
                 DiscEntry._ID,
-                //DiscEntry.COLUMN_DISC_IMAGE,
+                DiscEntry.COLUMN_DISC_IMAGE,
                 DiscEntry.COLUMN_DISC_ARTIST,
                 DiscEntry.COLUMN_DISC_TITLE,
                 DiscEntry.COLUMN_DISC_PRICE,

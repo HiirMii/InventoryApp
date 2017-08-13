@@ -2,14 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/list_item_image_size">
+    android:layout_height="@dimen/list_item_image_size"
+    android:descendantFocusability="blocksDescendants">
 
     <ImageView
         android:id="@+id/list_item_image"
         android:layout_width="@dimen/list_item_image_size"
         android:layout_height="@dimen/list_item_image_size"
-        android:scaleType="centerCrop"
         android:contentDescription="@string/image_description"
+        android:scaleType="centerCrop"
         android:src="@drawable/dummy_image" />
 
     <Button

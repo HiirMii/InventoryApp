@@ -22,13 +22,19 @@ import com.example.android.inventoryapp.data.DiscContract.DiscEntry;
  */
 public class DiscProvider extends ContentProvider {
 
-    /** Tag for the log messages */
+    /**
+     * Tag for the log messages
+     */
     public static final String LOG_TAG = DiscProvider.class.getSimpleName();
 
-    /** URI matcher code for the content URI for the discs table */
+    /**
+     * URI matcher code for the content URI for the discs table
+     */
     private static final int DISCS = 100;
 
-    /** URI matcher code for the content URI for a single disc in the discs table */
+    /**
+     * URI matcher code for the content URI for a single disc in the discs table
+     */
     private static final int DISC_ID = 101;
 
     /**
@@ -59,7 +65,9 @@ public class DiscProvider extends ContentProvider {
         uriMatcher.addURI(DiscContract.CONTENT_AUTHORITY, DiscContract.PATH_DISCS + "/#", DISC_ID);
     }
 
-    /** Database helper object */
+    /**
+     * Database helper object
+     */
     private DiscDBHelper discDBHelper;
 
     @Override
@@ -86,7 +94,7 @@ public class DiscProvider extends ContentProvider {
                 // For the DISCS code, query the discs table directly with the given
                 // projection, selection, selection arguments, and sort order. The cursor
                 // could contain multiple rows of the discs table.
-                cursor = database.query(DiscEntry.TABLE_NAME, projection, selection,selectionArgs,
+                cursor = database.query(DiscEntry.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, sortOrder);
                 break;
             case DISC_ID:
@@ -99,7 +107,7 @@ public class DiscProvider extends ContentProvider {
                 // arguments that will fill in the "?". Since we have 1 question mark in the
                 // selection, we have 1 String in the selection arguments' String array.
                 selection = DiscEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
 
                 // This will perform a query on the discs table where the _id equals 3 to return a
                 // Cursor containing that row of the table.
@@ -152,12 +160,12 @@ public class DiscProvider extends ContentProvider {
     private Uri insertDisc(Uri uri, ContentValues values) {
         // Check that the artist field is not null
         String artist = values.getAsString(DiscEntry.COLUMN_DISC_ARTIST);
-        if(artist == null) {
+        if (artist == null) {
             throw new IllegalArgumentException("You have to provide artist for this item.");
         }
         // Check that the title field is not null
         String title = values.getAsString(DiscEntry.COLUMN_DISC_TITLE);
-        if(title == null) {
+        if (title == null) {
             throw new IllegalArgumentException("You have to provide title for this item.");
         }
         // Check that the price field is not null
@@ -207,7 +215,7 @@ public class DiscProvider extends ContentProvider {
             case DISC_ID:
                 // Delete a single row given by the ID in the URI
                 selection = DiscEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 rowsDeleted = database.delete(DiscEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             default:
@@ -236,7 +244,7 @@ public class DiscProvider extends ContentProvider {
                 // so we know which row to update. Selection will be "_id=?" and selection
                 // arguments will be a String array containing the actual ID.
                 selection = DiscEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 return updateDisc(uri, values, selection, selectionArgs);
             default:
                 throw new IllegalArgumentException("Update is not supported for " + uri);
@@ -248,7 +256,7 @@ public class DiscProvider extends ContentProvider {
      * specified in the selection and selection arguments (which could be 0 or 1 or more discs).
      * Return the number of rows that were successfully updated.
      */
-    private int updateDisc(Uri uri, ContentValues values, String selection, String[] selectionArgs){
+    private int updateDisc(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         // If the {@link DiscEntry#COLUMN_DISC_ARTIST} key is present,
         // check that the artist field value is not null.
         if (values.containsKey(DiscEntry.COLUMN_DISC_ARTIST)) {

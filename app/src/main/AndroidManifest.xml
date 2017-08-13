@@ -4,7 +4,6 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -24,13 +23,14 @@
         <activity
             android:name=".DetailsActivity"
             android:label="@string/details_activity_title_new_item"
-            android:theme="@style/DetailsTheme"
-            android:parentActivityName=".StockActivity">
+            android:parentActivityName=".StockActivity"
+            android:theme="@style/DetailsTheme">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".StockActivity" />
         </activity>
+
         <provider
             android:name=".data.DiscProvider"
             android:authorities="com.example.android.inventoryapp"

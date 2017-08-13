@@ -1,16 +1,23 @@
 package com.example.android.inventoryapp;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -18,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -31,35 +39,67 @@ import com.example.android.inventoryapp.data.DiscContract.DiscEntry;
 public class DetailsActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    /** Tag for the log messages */
+    /**
+     * Tag for the log messages
+     */
     private static final String LOG_TAG = DetailsActivity.class.getSimpleName();
 
-    /** Identifier for the pet data loader */
+    /**
+     * Identifier for the pet data loader
+     */
     private static final int EXISTING_DISC_LOADER = 0;
-
-    /** Content URI for the existing disc (null if it's a new disc) */
+    /**
+     * FAB button used to order more CDs
+     */
+    FloatingActionButton orderMore;
+    /**
+     * URI for the disc image
+     */
+    Uri discImageUri;
+    /**
+     * Variable used to store currentPrice of the disc
+     */
+    int currentPrice = 0;
+    /**
+     * Variable used to store currentQuantity of the disc
+     */
+    int currentQuantity = 0;
+    /**
+     * Content URI for the existing disc (null if it's a new disc)
+     */
     private Uri currentUri;
-
-    private static final int PICK_IMAGE_REQUEST = 0;
-
-    /** ImageView field to enter the CD's cover image */
+    /**
+     * ImageView field to enter the CD's cover image
+     */
     private ImageView coverImageView;
-
-    /** EditText field to enter the CD's artist */
+    /**
+     * EditText field to enter the CD's artist
+     */
     private EditText artistEditText;
-
-    /** EditText field to enter the CD's title */
+    /**
+     * EditText field to enter the CD's title
+     */
     private EditText titleEditText;
-
-    /** EditText field to enter the CD's price */
+    /**
+     * EditText field to enter the CD's currentPrice
+     */
     private EditText priceEditText;
-
-    /** EditText field to enter the CD's quantity */
+    /**
+     * EditText field to enter the CD's currentQuantity
+     */
     private EditText quantityEditText;
-
-    /** Boolean flag that keeps track of whether the disc has been edited (true) or not (false) */
+    /**
+     * Button used to increase the CD's currentQuantity
+     */
+    private Button increaseButton;
+    /**
+     * Button used to decrease the CD's currentQuantity
+     */
+    private Button decreaseButton;
+    /**
+     * Boolean flag that keeps track of whether the disc has been edited (true) or not (false)
+     */
     private boolean discHasChanged = false;
-
     /**
      * OnTouchListener that listens for any user touches on a View, implying that they are modifying
      * the view, and we change the discHasChanged boolean to true.
@@ -88,12 +128,42 @@ public class DetailsActivity extends AppCompatActivity
             // This is a new disc, so change the app bar to say "Add to Stock"
             setTitle(getString(R.string.details_activity_title_new_item));
 
+            // hide orderMore FAB so you will not order item which does not exist yet
+            orderMore = (FloatingActionButton) findViewById(R.id.details_fab);
+            orderMore.setVisibility(View.GONE);
+
             // Invalidate the options menu, so the "Delete" menu option can be hidden.
             // (It doesn't make sense to delete a disc that hasn't been created yet.)
             invalidateOptionsMenu();
         } else {
             // Otherwise this is an existing disc, so change app bar to say "Edit Disc"
             setTitle(getString(R.string.details_activity_title_edit_item));
+
+            // allow user to order more CDs
+            orderMore = (FloatingActionButton) findViewById(R.id.details_fab);
+            orderMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // create email text message
+                    String emailMessage = getString(R.string.email_text) +
+                            artistEditText.getText().toString().trim() +
+                            " " +
+                            titleEditText.getText().toString().trim();
+
+                    // send an email to order more CDs
+                    Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+                    emailIntent.setData(Uri.parse("mailto:"));
+                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject));
+                    emailIntent.putExtra(Intent.EXTRA_TEXT, emailMessage);
+
+                    if (emailIntent.resolveActivity(getPackageManager()) != null) {
+                        startActivity(emailIntent);
+                    } else {
+                        Toast.makeText(DetailsActivity.this, getString(R.string.email_error),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
 
             // Initialize a loader to read the disc data from the database
             // and display the current values in the editor
@@ -106,6 +176,8 @@ public class DetailsActivity extends AppCompatActivity
         titleEditText = (EditText) findViewById(R.id.edit_disc_title);
         priceEditText = (EditText) findViewById(R.id.edit_disc_price);
         quantityEditText = (EditText) findViewById(R.id.edit_disc_quantity);
+        increaseButton = (Button) findViewById(R.id.increase_quantity);
+        decreaseButton = (Button) findViewById(R.id.decrease_quantity);
 
         // Setup OnTouchListeners on all the input fields, so we can determine if the user
         // has touched or modified them. This will let us know if there are unsaved changes
@@ -115,12 +187,39 @@ public class DetailsActivity extends AppCompatActivity
         titleEditText.setOnTouchListener(touchListener);
         priceEditText.setOnTouchListener(touchListener);
         quantityEditText.setOnTouchListener(touchListener);
+        increaseButton.setOnTouchListener(touchListener);
+        decreaseButton.setOnTouchListener(touchListener);
+    }
+
+    public void pickImage(View view) {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+            }
+            return;
+        }
+        openSelection();
+    }
+
+    private void openSelection() {
+        Intent imageIntent;
+        if (Build.VERSION.SDK_INT < 19) {
+            imageIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        } else {
+            imageIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            imageIntent.addCategory(Intent.CATEGORY_OPENABLE);
+        }
+        imageIntent.setType("image/*");
+        startActivityForResult(Intent.createChooser(imageIntent, "Select Picture"), 0);
     }
 
     /**
      * Get user input from editor and save disc into database.
      */
-    private void saveDisc () {
+    private void saveDisc() {
         // Read from input fields
         // Use trim to eliminate leading or trailing white space
         String artistString = artistEditText.getText().toString().trim();
@@ -132,7 +231,8 @@ public class DetailsActivity extends AppCompatActivity
         // and check if all the fields in the editor are blank
         if (currentUri == null &&
                 TextUtils.isEmpty(artistString) && TextUtils.isEmpty(titleString) &&
-                TextUtils.isEmpty(priceString) && TextUtils.isEmpty(quantityString)) {
+                TextUtils.isEmpty(priceString) && TextUtils.isEmpty(quantityString) &&
+                discImageUri == null) {
             // Since no fields were modified, we can return early without creating a new disc.
             // No need to create ContentValues and no need to do any ContentProvider operations.
             return;
@@ -141,22 +241,42 @@ public class DetailsActivity extends AppCompatActivity
         // Create a ContentValues object where column names are the keys,
         // and disc attributes from the editor are the values.
         ContentValues values = new ContentValues();
-        values.put(DiscEntry.COLUMN_DISC_ARTIST, artistString);
-        values.put(DiscEntry.COLUMN_DISC_TITLE, titleString);
-        // If the price is not provided by the user, don't try to parse the string into an
+        if (discImageUri == null) {
+            Toast.makeText(this, getString(R.string.image_required),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        } else values.put(DiscEntry.COLUMN_DISC_IMAGE, discImageUri.toString());
+
+        if (TextUtils.isEmpty(artistString)) {
+            Toast.makeText(this, getString(R.string.artist_required),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        } else {
+            values.put(DiscEntry.COLUMN_DISC_ARTIST, artistString);
+        }
+
+        if (TextUtils.isEmpty(titleString)) {
+            Toast.makeText(this, getString(R.string.title_required),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        } else {
+            values.put(DiscEntry.COLUMN_DISC_TITLE, titleString);
+        }
+
+        // If the currentPrice is not provided by the user, don't try to parse the string into an
         // integer value. Use 0 by default.
-        int price = 0;
+        currentPrice = 0;
         if (!TextUtils.isEmpty(priceString)) {
-            price = Integer.parseInt(priceString);
+            currentPrice = Integer.parseInt(priceString);
         }
-        values.put(DiscEntry.COLUMN_DISC_PRICE, price);
-        // If the quantity is not provided by the user, don't try to parse the string into an
+        values.put(DiscEntry.COLUMN_DISC_PRICE, currentPrice);
+        // If the currentQuantity is not provided by the user, don't try to parse the string into an
         // integer value. Use 0 by default.
-        int quantity = 0;
+        currentQuantity = 0;
         if (!TextUtils.isEmpty(quantityString)) {
-            quantity = Integer.parseInt(quantityString);
+            currentQuantity = Integer.parseInt(quantityString);
         }
-        values.put(DiscEntry.COLUMN_DISC_QUANTITY, quantity);
+        values.put(DiscEntry.COLUMN_DISC_QUANTITY, currentQuantity);
 
         // Determine if this is a new or existing disc by checking if currentUri is null or not
         if (currentUri == null) {
@@ -194,20 +314,26 @@ public class DetailsActivity extends AppCompatActivity
         }
     }
 
-    public void pickImage(View view) {
-
-        Intent pickImageIntent;
-
-        if(Build.VERSION.SDK_INT < 19) {
-            pickImageIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        } else {
-            pickImageIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-            pickImageIntent.addCategory(Intent.CATEGORY_OPENABLE);
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openSelection();
+                }
         }
+    }
 
-        pickImageIntent.setType("image/*");
-        startActivityForResult(Intent.createChooser(pickImageIntent, "Select Image"), PICK_IMAGE_REQUEST);
-        discHasChanged = true;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                discImageUri = data.getData();
+                coverImageView.setImageURI(discImageUri);
+                coverImageView.invalidate();
+            }
+        }
     }
 
     @Override
@@ -309,6 +435,7 @@ public class DetailsActivity extends AppCompatActivity
         // all columns from the disc table
         String[] projection = {
                 DiscEntry._ID,
+                DiscEntry.COLUMN_DISC_IMAGE,
                 DiscEntry.COLUMN_DISC_ARTIST,
                 DiscEntry.COLUMN_DISC_TITLE,
                 DiscEntry.COLUMN_DISC_PRICE,
@@ -334,22 +461,28 @@ public class DetailsActivity extends AppCompatActivity
         // (This should be the only row in the cursor)
         if (cursor.moveToFirst()) {
             // Find the columns of disc attributes that we're interested in
+            int imageColumnIndex = cursor.getColumnIndex(DiscEntry.COLUMN_DISC_IMAGE);
             int artistColumnIndex = cursor.getColumnIndex(DiscEntry.COLUMN_DISC_ARTIST);
             int titleColumnIndex = cursor.getColumnIndex(DiscEntry.COLUMN_DISC_TITLE);
             int priceColumnIndex = cursor.getColumnIndex(DiscEntry.COLUMN_DISC_PRICE);
             int quantityColumnIndex = cursor.getColumnIndex(DiscEntry.COLUMN_DISC_QUANTITY);
 
             // Extract out the value from the Cursor for the given column index
+            String image = cursor.getString(imageColumnIndex);
             String artist = cursor.getString(artistColumnIndex);
             String title = cursor.getString(titleColumnIndex);
             int price = cursor.getInt(priceColumnIndex);
             int quantity = cursor.getInt(quantityColumnIndex);
 
             // Update the views on the screen with the values from the database
+            discImageUri = Uri.parse(image);
+            coverImageView.setImageURI(discImageUri);
             artistEditText.setText(artist);
             titleEditText.setText(title);
             priceEditText.setText(Integer.toString(price));
             quantityEditText.setText(Integer.toString(quantity));
+            currentPrice = price;
+            currentQuantity = quantity;
         }
     }
 
@@ -443,5 +576,26 @@ public class DetailsActivity extends AppCompatActivity
 
         // Close the activity
         finish();
+    }
+
+    /**
+     * This method is called when the plus button is clicked.
+     */
+    public void increment(View view) {
+        currentQuantity += 1;
+        quantityEditText.setText(String.valueOf(currentQuantity));
+    }
+
+    /**
+     * This method is called when the minus button is clicked.
+     */
+    public void decrement(View view) {
+        if (currentQuantity == 0) {
+            Toast.makeText(this, getString(R.string.decrement_zero_quantity),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        currentQuantity -= 1;
+        quantityEditText.setText(String.valueOf(currentQuantity));
     }
 }

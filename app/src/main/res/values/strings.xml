@@ -53,9 +53,6 @@
     <!-- Label for stock information in the details activity [CHAR LIMIT=30] -->
     <string name="category_stock_info">Stock Info</string>
 
-    <!-- Label for stock value in the details activity [CHAR LIMIT=30] -->
-    <string name="category_stock_value">Stock Value</string>
-
     <!-- Text hint for artist field in the details activity [CHAR LIMIT=30] -->
     <string name="hint_disc_artist">Artist</string>
 
@@ -67,9 +64,6 @@
 
     <!-- Units for price of the item (dollars) [CHAR LIMIT=5] -->
     <string name="unit_disc_price">$</string>
-
-    <!-- Text hint for total value field in the details activity [CHAR LIMIT=30] -->
-    <string name="hint_disc_total">0</string>
 
     <!-- Text hint for quantity field in the details activity [CHAR LIMIT=30] -->
     <string name="hint_disc_quantity">Quantity</string>
@@ -127,4 +121,16 @@
     <!-- Dialog button text for the option to keep editing the current disc [CHAR LIMIT=20] -->
     <string name="keep_editing">Keep Editing</string>
 
+    <!-- Toast message displayed if user wants to decrement quantity which value is 0 -->
+    <string name="decrement_zero_quantity">Quantity can not be less than zero.</string>
+
+    <!-- Toast messages for DetailsActivity field validation -->
+    <string name="artist_required">Artist field is required.</string>
+    <string name="title_required">Title field is required</string>
+    <string name="image_required">Disc image is required</string>
+
+    <!-- Order Email intent fields -->
+    <string name="email_subject">Disc order needed</string>
+    <string name="email_text">I would like to order 10 copies of&#160;</string>
+    <string name="email_error">Unable to send email.</string>
 </resources>

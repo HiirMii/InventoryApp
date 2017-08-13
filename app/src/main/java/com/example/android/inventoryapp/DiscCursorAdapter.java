@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,7 +65,7 @@ public class DiscCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, final Context context, Cursor cursor) {
         // Find individual views that we want to modify in the list item layout
-        //ImageView discImageView = (ImageView) view.findViewById(R.id.list_item_image);
+        ImageView discImageView = (ImageView) view.findViewById(R.id.list_item_image);
         TextView artistTextView = (TextView) view.findViewById(R.id.list_item_artist);
         TextView titleTextView = (TextView) view.findViewById(R.id.list_item_title);
         TextView priceTextView = (TextView) view.findViewById(R.id.list_item_price_value);
@@ -72,7 +73,7 @@ public class DiscCursorAdapter extends CursorAdapter {
 
         // Find the columns of disc attributes that we're interested in
         int idColumnIndex = cursor.getColumnIndex(DiscEntry._ID);
-        //int imageColumnIndex = cursor.getColumnIndex(DiscEntry.COLUMN_DISC_IMAGE);
+        int imageColumnIndex = cursor.getColumnIndex(DiscEntry.COLUMN_DISC_IMAGE);
         int artistColumnIndex = cursor.getColumnIndex(DiscEntry.COLUMN_DISC_ARTIST);
         int titleColumnIndex = cursor.getColumnIndex(DiscEntry.COLUMN_DISC_TITLE);
         int priceColumnIndex = cursor.getColumnIndex(DiscEntry.COLUMN_DISC_PRICE);
@@ -80,25 +81,20 @@ public class DiscCursorAdapter extends CursorAdapter {
 
         // Read the disc attributes from the Cursor for the current disc
         final int discId = cursor.getInt(idColumnIndex);
-        //Uri discImage = Uri.parse(cursor.getString(imageColumnIndex));
+        Uri discImage = Uri.parse(cursor.getString(imageColumnIndex));
         String discArtist = cursor.getString(artistColumnIndex);
         String discTitle = cursor.getString(titleColumnIndex);
         int discPrice = cursor.getInt(priceColumnIndex);
         int discQuantity = cursor.getInt(quantityColumnIndex);
 
         // Update the TextViews with the attributes for the current disc
+        discImageView.setImageURI(discImage);
         artistTextView.setText(discArtist);
         titleTextView.setText(discTitle);
         priceTextView.setText(Integer.toString(discPrice));
         quantityTextView.setText(Integer.toString(discQuantity));
 
-        // Update the ImageView using Picasso library
-        /* Picasso.with(context).load(discImage)
-                .placeholder(R.drawable.no_image)
-                .fit()
-                .into(discImageView); */
-
-        // Hide Sell Button if quantity is zero
+        // Hide Sell Button if currentQuantity is zero
         Button sellButton = (Button) view.findViewById(R.id.list_item_sell_button);
         if (discQuantity == 0) {
             sellButton.setVisibility(View.GONE);
@@ -106,17 +102,17 @@ public class DiscCursorAdapter extends CursorAdapter {
             sellButton.setVisibility(View.VISIBLE);
         }
 
-        // Decrease quantity of the current disc when sell button is clicked
+        // Decrease currentQuantity of the current disc when sell button is clicked
         sellButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // get the current quantity for item
+                // get the current currentQuantity for item
                 int currentQuantity = Integer.parseInt(quantityTextView.getText().toString());
-                // decrease the quantity by 1
+                // decrease the currentQuantity by 1
                 currentQuantity -= 1;
-                // display the changed quantity value
+                // display the changed currentQuantity value
                 quantityTextView.setText(Integer.toString(currentQuantity));
-                // store changed quantity in the database
+                // store changed currentQuantity in the database
                 ContentValues values = new ContentValues();
                 values.put(DiscEntry.COLUMN_DISC_QUANTITY, currentQuantity);
                 Uri currentDiscUri = ContentUris.withAppendedId(DiscEntry.CONTENT_URI, discId);
@@ -124,7 +120,7 @@ public class DiscCursorAdapter extends CursorAdapter {
                 int rowsAffected = context.getContentResolver().update(currentDiscUri, values, null, null);
                 // Show a toast message depending on whether or not the update was successful.
                 if (rowsAffected == 0) {
-                    Toast.makeText(context.getApplicationContext(), "Error with quantity update.",
+                    Toast.makeText(context.getApplicationContext(), "Error with currentQuantity update.",
                             Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(context.getApplicationContext(), "Quantity successfully updated.",
